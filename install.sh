@@ -4,8 +4,8 @@ set -e
 # Update package manager
 sudo pacman -Syu --noconfirm
 
-# Install git
-sudo pacman -S --noconfirm git 
+# Install required packages 
+sudo pacman -S --noconfirm git zsh
 
 # Create workplace dir
 mkdir -p $HOME/workplace

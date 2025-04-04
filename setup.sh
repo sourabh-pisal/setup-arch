@@ -4,6 +4,9 @@ set -e
 # cleanup old dotfiles
 rm -rf $HOME/workplace/dotfiles
 
+# Install required packages from package-list.txt
+sudo pacman -S --noconfirm $(cat package-list.txt)
+
 # Install omzsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
@@ -25,6 +28,3 @@ cd $HOME/workplace/dotfiles
 # Setup dotfiles
 /usr/bin/git --git-dir=$HOME/workplace/dotfiles --work-tree=$HOME switch -f mainline
 /usr/bin/git --git-dir=$HOME/workplace/dotfiles --work-tree=$HOME config --local status.showUntrackedFiles no
-
-# Set zsh as default shell
-chsh -s $(which zsh)

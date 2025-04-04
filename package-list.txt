@@ -1,10 +1,10 @@
 arch-audit
+btop
 firefox
 foot
 fzf
 gcc
 git
-htop
 iwd
 lazygit
 libnotify
