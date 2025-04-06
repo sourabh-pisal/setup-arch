@@ -33,6 +33,7 @@ swaync
 texinfo
 tmux
 tree
+ttf-droid
 ttf-jetbrains-mono
 typescript
 ufw
