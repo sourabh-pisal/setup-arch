@@ -1,4 +1,5 @@
 arch-audit
+brightnessctl
 btop
 firefox
 foot
@@ -12,12 +13,15 @@ lvm2
 man-db
 man-pages
 neovim
+npm
 openssh
 pipewire
 pipewire-alsa
 pipewire-audio
 pipewire-pulse
 polkit
+power-profiles-daemon
+python-gobject
 ripgrep
 sbctl
 sudo
@@ -29,7 +33,8 @@ swaync
 texinfo
 tmux
 tree
-ttf-meslo-nerd
+ttf-jetbrains-mono
+typescript
 ufw
 vim
 waybar
