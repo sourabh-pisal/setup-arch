@@ -1,0 +1,12 @@
+base-devel
+btop
+file
+fzf
+gcc
+git
+lazygit
+neovim
+procps-ng
+ripgrep
+tmux
+zsh
