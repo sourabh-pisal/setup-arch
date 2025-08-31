@@ -23,7 +23,7 @@ install_prerequisites() {
         arch)
             echo "Updating and installing packages on Arch Linux"
             sudo pacman -Syu --noconfirm
-            sudo pacman -S --noconfirm --needed - < archpkglist.txt
+            sudo pacman -Sy --noconfirm --needed base-devel btop file fzf gcc git lazygit neovim procps-ng ripgrep tmux zsh
             ;;
         
         *)
