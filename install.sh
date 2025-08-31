@@ -40,8 +40,6 @@ configure_github() {
     read -p "Enter your Git email: " GIT_EMAIL
     git config --global user.name "$GIT_NAME"
     git config --global user.email "$GIT_EMAIL"
-    echo "Git global config set:"
-    git config --global --list
 
     SSH_FILE="$HOME/.ssh/id_ed25519"
     if [ ! -f "$SSH_FILE" ]; then
