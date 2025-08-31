@@ -1,5 +1,0 @@
-build-essential
-procps 
-file 
-git 
-zsh

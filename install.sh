@@ -17,13 +17,13 @@ install_prerequisites() {
         ubuntu|debian)
             echo "Updating and installing packages on Debian/Ubuntu"
             sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
-            xargs sudo apt-get -y install < debianpkglist.txt
+            sudo apt-get -y install build-essential procps file git zsh less vim
             ;;
         
         arch)
             echo "Updating and installing packages on Arch Linux"
             sudo pacman -Syu --noconfirm
-            sudo pacman -Sy --noconfirm --needed base-devel btop file fzf gcc git lazygit neovim procps-ng ripgrep tmux zsh
+            sudo pacman -Sy --noconfirm --needed base-devel btop file fzf gcc git lazygit less neovim procps-ng ripgrep tmux vim zsh
             ;;
         
         *)
@@ -79,7 +79,6 @@ install_omzsh() {
       sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
   else
       echo "Oh My Zsh is already installed. Skipping installation."
-  
   fi
 }
 
@@ -91,9 +90,9 @@ main() {
     detect_distro
     install_prerequisites
     configure_github
-    setup_dotfiles
     install_tmux_tpm
     install_omzsh
+    setup_dotfiles
     set_default_shell
     echo "Setup completed successfully!"
 }
