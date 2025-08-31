@@ -23,7 +23,7 @@ install_prerequisites() {
         arch)
             echo "Updating and installing packages on Arch Linux"
             sudo pacman -Syu --noconfirm
-            sudo pacman -S --noconfirm --needed - < pkglist.txt
+            sudo pacman -S --noconfirm --needed - < archpkglist.txt
             ;;
         
         *)
