@@ -23,7 +23,43 @@ install_prerequisites() {
         arch)
             echo "Updating and installing packages on Arch Linux"
             sudo pacman -Syu --noconfirm
-            sudo pacman -Sy --noconfirm --needed base-devel btop file fzf gcc git lazygit less neovim procps-ng ripgrep tmux vim zsh
+            packages=(
+              alacritty
+              brightnessctl
+              dolphin
+              firefox
+              fzf
+              gcc
+              git
+              htop
+              lazygit
+              less
+              libnotify
+              neovim
+              nodejs
+              npm
+              openssh
+              pipewire
+              pipewire-alsa
+              pipewire-audio
+              pipewire-pulse
+              power-profiles-daemon
+              ripgrep
+              sway
+              swaybg
+              swayidle
+              swaylock
+              swaync
+              tmux
+              ttf-jetbrains-mono-nerd
+              ttf-opensans
+              waybar
+              which
+              wireplumber
+              wofi
+              zsh
+            )
+            sudo pacman -Sy --noconfirm --needed "${packages[@]}"
             ;;
         
         *)
