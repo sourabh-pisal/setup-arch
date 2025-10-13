@@ -4,6 +4,11 @@ set -e
 PKG_LIST_PATH="${HOME}/.config/zsh/pkglist_$(cat /etc/hostname).txt"
 
 install_prerequisites() {
+    echo "Updating and installing git and zsh"
+    sudo pacman -Syu git zsh
+}
+
+install_packages() {
     echo "Updating and installing packages"
     sudo pacman -S - < "$PKG_LIST_PATH" 
 }
@@ -59,13 +64,21 @@ set_default_shell() {
   chsh -s $(which zsh)
 }
 
+set_wallpaper() {
+  mkdir ~/Pictures
+  cp /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png ~/Pictures/wallpaper.png
+}
+
 main() {
+    install_prerequisites
     configure_github
     install_tmux_tpm
     install_omzsh
     setup_dotfiles
-    install_prerequisites
+    install_packages
     set_default_shell
+    set_wallpaper
+
     echo "Setup completed successfully!"
 }
 
