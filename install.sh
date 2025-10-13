@@ -1,74 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-detect_distro() {
-    if [ -f /etc/os-release ]; then
-        . /etc/os-release
-        DISTRO=$ID
-    else
-        echo "Cannot detect Linux distribution!"
-        exit 1
-    fi
-    echo "Detected Linux distribution: $DISTRO"
-}
+PKG_LIST_PATH="${HOME}/.config/zsh/pkglist_$(cat /etc/hostname).txt"
 
 install_prerequisites() {
-    case "$DISTRO" in
-        ubuntu|debian)
-            echo "Updating and installing packages on Debian/Ubuntu"
-            sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
-            sudo apt-get -y install build-essential procps file git zsh less vim
-            ;;
-        
-        arch)
-            echo "Updating and installing packages on Arch Linux"
-            sudo pacman -Syu --noconfirm
-            packages=(
-              alacritty
-              brightnessctl
-              dolphin
-              firefox
-              fzf
-              gcc
-              git
-              htop
-              lazygit
-              less
-              libnotify
-              neovim
-              nodejs
-              npm
-              openssh
-              pipewire
-              pipewire-alsa
-              pipewire-audio
-              pipewire-pulse
-              power-profiles-daemon
-              ripgrep
-              sway
-              swaybg
-              swayidle
-              swaylock
-              swaync
-              tmux
-              ttf-jetbrains-mono-nerd
-              ttf-opensans
-              waybar
-              which
-              wireplumber
-              wofi
-              zsh
-            )
-            sudo pacman -Sy --noconfirm --needed "${packages[@]}"
-            ;;
-        
-        *)
-
-            echo "Unsupported distribution: $DISTRO"
-            exit 1
-            ;;
-
-    esac
+    echo "Updating and installing packages"
+    sudo pacman -S - < "$PKG_LIST_PATH" 
 }
 
 configure_github() {
@@ -123,12 +60,11 @@ set_default_shell() {
 }
 
 main() {
-    detect_distro
-    install_prerequisites
     configure_github
     install_tmux_tpm
     install_omzsh
     setup_dotfiles
+    install_prerequisites
     set_default_shell
     echo "Setup completed successfully!"
 }
