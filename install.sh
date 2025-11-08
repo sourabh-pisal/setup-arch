@@ -60,6 +60,12 @@ install_omzsh() {
   fi
 }
 
+set_gpg_pass() {
+  gpg --full-generate-key
+  GPG_KEY_ID=$(gpg --list-secret-keys --keyid-format=long | grep sec | tail -n1 | awk '{print $2}' | cut -d'/' -f2)
+  pass init "$GPG_KEY_ID"
+}
+
 set_default_shell() {
   chsh -s $(which zsh)
 }
@@ -76,8 +82,9 @@ main() {
     install_omzsh
     setup_dotfiles
     install_packages
-    set_default_shell
+    set_gpg_pass
     set_wallpaper
+    set_default_shell
 
     echo "Setup completed successfully!"
 }
