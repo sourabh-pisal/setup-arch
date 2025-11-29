@@ -83,6 +83,21 @@ set_groups() {
   newgrp davfs2
 }
 
+set_power_button_to_suspend() {
+    local file="/etc/systemd/logind.conf"
+
+    sudo sed -i \
+        -e '/^HandlePowerKey=/d' \
+        -e '/^HandlePowerKeyLongPress=/d' \
+        "$file"
+
+    sudo sh -c "
+        echo 'HandlePowerKey=suspend' >> $file
+        echo 'HandlePowerKeyLongPress=poweroff' >> $file
+    "
+}
+
+
 main() {
     install_prerequisites
     configure_github
@@ -94,6 +109,7 @@ main() {
     set_wallpaper
     set_default_shell
     set_groups
+    set_power_button_to_suspend
 
     echo "Setup completed successfully!"
 }
