@@ -75,6 +75,14 @@ set_wallpaper() {
   cp /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png ~/Pictures/wallpaper.png
 }
 
+set_groups() {
+  sudo groupadd davfs2
+  sudo usermod -aG davfs2 $USER
+  sudo usermod -aG network $USER
+  newgrp network
+  newgrp davfs2
+}
+
 main() {
     install_prerequisites
     configure_github
@@ -85,6 +93,7 @@ main() {
     set_gpg_pass
     set_wallpaper
     set_default_shell
+    set_groups
 
     echo "Setup completed successfully!"
 }
