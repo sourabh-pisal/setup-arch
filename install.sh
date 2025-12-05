@@ -77,10 +77,13 @@ set_wallpaper() {
 
 set_groups() {
   sudo groupadd davfs2
+  sudo groupadd docker
   sudo usermod -aG davfs2 $USER
   sudo usermod -aG network $USER
+  sudo usermod -aG docker $USER
   newgrp network
   newgrp davfs2
+  newgrp docker
 }
 
 set_power_button_to_suspend() {
