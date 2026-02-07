@@ -99,14 +99,40 @@ set_wallpaper() {
 }
 
 set_groups() {
-  sudo groupadd davfs2
-  sudo groupadd docker
-  sudo usermod -aG davfs2 $USER
-  sudo usermod -aG network $USER
-  sudo usermod -aG docker $USER
-  newgrp network
-  newgrp davfs2
-  newgrp docker
+  local user="${SUDO_USER:-$USER}"
+
+  ensure_group() {
+    local grp="$1"
+    if ! getent group "$grp" >/dev/null; then
+      echo "Creating group: $grp"
+      sudo groupadd "$grp"
+    else
+      echo "Group exists: $grp"
+    fi
+  }
+
+  ensure_user_in_group() {
+    local grp="$1"
+    if id -nG "$user" | grep -qw "$grp"; then
+      echo "User already in group: $grp"
+    else
+      echo "Adding $user to group: $grp"
+      sudo usermod -aG "$grp" "$user"
+      NEED_RELOGIN=1
+    fi
+  }
+
+  NEED_RELOGIN=0
+
+  # create groups if missing
+  ensure_group davfs2
+  ensure_group docker
+  ensure_group network
+
+  # add user if missing
+  ensure_user_in_group davfs2
+  ensure_user_in_group docker
+  ensure_user_in_group network
 }
 
 set_power_button_to_suspend() {
