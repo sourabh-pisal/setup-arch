@@ -61,12 +61,6 @@ install_omzsh() {
   fi
 }
 
-set_gpg_pass() {
-  gpg --full-generate-key
-  GPG_KEY_ID=$(gpg --list-secret-keys --keyid-format=long | grep sec | tail -n1 | awk '{print $2}' | cut -d'/' -f2)
-  pass init "$GPG_KEY_ID"
-}
-
 set_default_shell() {
   local zsh_path
   zsh_path="$(which zsh)"
@@ -157,7 +151,6 @@ main() {
     install_omzsh
     setup_dotfiles
     install_packages
-    set_gpg_pass
     set_wallpaper
     set_groups
     set_power_button_to_suspend
