@@ -27,7 +27,14 @@ configure_github() {
 
     echo "Copy the following SSH key and add it to your GitHub account:"
     cat "$SSH_FILE.pub"
-    read -n1 -rsp $'Press any key to continue once you have added the SSH key to GitHub...\n'
+
+    while true; do
+        read -p "Press 'y' to continue once you have added the SSH key to GitHub: " confirm
+        case "$confirm" in
+            [yY]) break ;;
+            *) echo "Please press 'y' to continue." ;;
+        esac
+    done
 }
 
 setup_dotfiles() {
