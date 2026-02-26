@@ -5,7 +5,7 @@ PKG_LIST_PATH="${HOME}/.config/zsh/pkglist_$(cat /etc/hostname).txt"
 
 install_prerequisites() {
     echo "Install necessary packages"
-    sudo pacman -Syu git zsh openssh
+    sudo pacman -Syu git 
 }
 
 install_packages() {
@@ -38,12 +38,12 @@ configure_github() {
 }
 
 setup_dotfiles() {
-    mkdir -p "$HOME/Workplace"
-    cd "$HOME/Workplace"
-    git clone --bare git@github.com:sourabh-pisal/dotfiles.git "$HOME/Workplace/dotfiles"
-    alias dotfiles="/usr/bin/git --git-dir=$HOME/Workplace/dotfiles --work-tree=$HOME"
-    /usr/bin/git --git-dir="$HOME/Workplace/dotfiles" --work-tree="$HOME" switch -f mainline
-    /usr/bin/git --git-dir="$HOME/Workplace/dotfiles" --work-tree="$HOME" config --local status.showUntrackedFiles no
+    mkdir -p "$HOME/workspace"
+    cd "$HOME/workspace"
+    git clone --bare git@github.com:sourabh-pisal/dotfiles.git "$HOME/workspace/dotfiles"
+    alias dotfiles="/usr/bin/git --git-dir=$HOME/workspace/dotfiles --work-tree=$HOME"
+    /usr/bin/git --git-dir="$HOME/workspace/dotfiles" --work-tree="$HOME" switch -f mainline
+    /usr/bin/git --git-dir="$HOME/workspace/dotfiles" --work-tree="$HOME" config --local status.showUntrackedFiles no
 }
 
 install_tmux_tpm() {
@@ -55,38 +55,6 @@ install_tmux_tpm() {
   else
       echo "TPM repository already exists. Skipping clone."
   fi
-}
-
-install_omzsh() {
-  OMZ_DIR="$HOME/.oh-my-zsh"
-
-  if [ ! -d "$OMZ_DIR" ]; then
-      echo "Installing Oh My Zsh..."
-      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-  else
-      echo "Oh My Zsh is already installed. Skipping installation."
-  fi
-}
-
-set_default_shell() {
-  local zsh_path
-  zsh_path="$(which zsh)"
-
-  if [[ -z "$zsh_path" ]]; then
-    echo "zsh is not installed or not found in PATH."
-    return 1
-  fi
-
-  if ! grep -qx "$zsh_path" /etc/shells; then
-    echo "zsh not listed in /etc/shells. Adding it"
-    echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null || {
-      echo "Failed to add zsh to /etc/shells."
-      return 0
-    }
-  fi
-
-  echo "Changing default shell to zsh"
-  chsh -s "$zsh_path"
 }
 
 set_wallpaper() {
@@ -155,13 +123,11 @@ main() {
     install_prerequisites
     configure_github
     install_tmux_tpm
-    install_omzsh
     setup_dotfiles
     install_packages
     set_wallpaper
     set_groups
     set_power_button_to_suspend
-    set_default_shell
 
     echo "Setup completed successfully!"
 }
