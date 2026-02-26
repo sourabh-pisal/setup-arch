@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-PKG_LIST_PATH="${HOME}/.config/zsh/pkglist_$(cat /etc/hostname).txt"
+PKG_LIST_PATH="${HOME}/.config/pkg/$(cat /etc/hostname).txt"
 
 install_prerequisites() {
     echo "Install necessary packages"
