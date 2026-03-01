@@ -104,6 +104,25 @@ set_groups() {
   ensure_user_in_group network
 }
 
+configure_bluetooth() {
+    if ! pacman -Qi bluez >/dev/null 2>&1; then
+        echo "bluez is not installed. Skipping bluetooth setup."
+        return 0
+    fi
+
+    echo "Configuring bluetooth..."
+    sudo systemctl enable bluetooth.service
+    sudo systemctl start bluetooth.service
+
+    local conf="/etc/bluetooth/main.conf"
+    if [ -f "$conf" ]; then
+        sudo sed -i '/^AutoEnable=/d' "$conf"
+        echo "AutoEnable=true" | sudo tee -a "$conf" > /dev/null
+    else
+        echo "Bluetooth config not found at $conf. Skipping AutoEnable setting."
+    fi
+}
+
 set_power_button_to_suspend() {
     local file="/etc/systemd/logind.conf"
 
@@ -128,6 +147,7 @@ main() {
     set_wallpaper
     set_groups
     set_power_button_to_suspend
+    configure_bluetooth
 
     echo "Setup completed successfully!"
 }
