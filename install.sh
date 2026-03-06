@@ -137,6 +137,24 @@ set_power_button_to_suspend() {
     "
 }
 
+configure_zram() {
+    local conf="/etc/systemd/zram-generator.conf"
+
+    echo "Configuring ZRAM..."
+
+    sudo tee /etc/systemd/zram-generator.conf > /dev/null <<'EOF'
+[zram0]
+zram-size = ram / 2
+compression-algorithm = zstd
+swap-priority = 100
+EOF
+
+    echo "Reloading systemd..."
+    sudo systemctl daemon-reexec
+
+    echo "ZRAM configured successfully."
+}
+
 
 main() {
     install_prerequisites
@@ -148,6 +166,7 @@ main() {
     set_groups
     set_power_button_to_suspend
     configure_bluetooth
+    configure_zram
 
     echo "Setup completed successfully!"
 }
