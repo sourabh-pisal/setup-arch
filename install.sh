@@ -63,8 +63,8 @@ set_wallpaper() {
     return 0
   fi
 
-  mkdir ~/Pictures
-  cp /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png ~/Pictures/wallpaper.png
+  mkdir ~/pictures
+  cp /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png ~/pictures/wallpaper.png
 }
 
 set_groups() {
