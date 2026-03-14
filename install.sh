@@ -162,11 +162,11 @@ main() {
     install_tmux_tpm
     setup_dotfiles
     install_packages
-    set_wallpaper
+    # set_wallpaper
     set_groups
-    set_power_button_to_suspend
+    # set_power_button_to_suspend
     configure_bluetooth
-    configure_zram
+    # configure_zram
 
     echo "Setup completed successfully!"
 }
