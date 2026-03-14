@@ -5,12 +5,16 @@ PKG_LIST_PATH="${HOME}/.config/pkg/$(cat /etc/hostname).txt"
 
 install_prerequisites() {
     echo "Install necessary packages"
-    sudo pacman -Syu git 
+    sudo pacman -Syu git
 }
 
 install_packages() {
+    if [ ! -f "$PKG_LIST_PATH" ]; then
+        echo "Package list not found at $PKG_LIST_PATH. Skipping package installation."
+        return
+    fi
     echo "Updating and installing packages"
-    sudo pacman -S - < "$PKG_LIST_PATH" 
+    sudo pacman -S - < "$PKG_LIST_PATH"
 }
 
 configure_github() {
@@ -39,9 +43,7 @@ configure_github() {
 
 setup_dotfiles() {
     mkdir -p "$HOME/workspace"
-    cd "$HOME/workspace"
     git clone --bare git@github.com:sourabh-pisal/dotfiles.git "$HOME/workspace/dotfiles"
-    alias dotfiles="/usr/bin/git --git-dir=$HOME/workspace/dotfiles --work-tree=$HOME"
     /usr/bin/git --git-dir="$HOME/workspace/dotfiles" --work-tree="$HOME" switch -f mainline
     /usr/bin/git --git-dir="$HOME/workspace/dotfiles" --work-tree="$HOME" config --local status.showUntrackedFiles no
 }
@@ -63,8 +65,14 @@ set_wallpaper() {
     return 0
   fi
 
-  mkdir ~/pictures
-  cp /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png ~/pictures/wallpaper.png
+  local src="/usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png"
+  if [ ! -f "$src" ]; then
+    echo "Wallpaper source not found at $src. Skipping wallpaper setup."
+    return 0
+  fi
+
+  mkdir -p ~/pictures
+  cp "$src" ~/pictures/wallpaper.png
 }
 
 set_groups() {
@@ -102,6 +110,10 @@ set_groups() {
   ensure_user_in_group davfs2
   ensure_user_in_group docker
   ensure_user_in_group network
+
+  if [ "$NEED_RELOGIN" -eq 1 ]; then
+      echo "Group memberships changed. Please log out and back in for changes to take effect."
+  fi
 }
 
 configure_bluetooth() {
@@ -126,19 +138,29 @@ configure_bluetooth() {
 set_power_button_to_suspend() {
     local file="/etc/systemd/logind.conf"
 
+    if [ ! -f "$file" ]; then
+        echo "$file not found, skipping power button configuration."
+        return
+    fi
+
     sudo sed -i \
         -e '/^HandlePowerKey=/d' \
         -e '/^HandlePowerKeyLongPress=/d' \
         "$file"
 
-    sudo sh -c "
-        echo 'HandlePowerKey=suspend' >> $file
-        echo 'HandlePowerKeyLongPress=poweroff' >> $file
-    "
+    sudo sh -c '
+        echo HandlePowerKey=suspend >> '"$file"'
+        echo HandlePowerKeyLongPress=poweroff >> '"$file"'
+    '
 }
 
 configure_zram() {
     local conf="/etc/systemd/zram-generator.conf"
+
+    if [ -f "$conf" ]; then
+        echo "ZRAM already configured, skipping."
+        return
+    fi
 
     echo "Configuring ZRAM..."
 
@@ -159,14 +181,14 @@ EOF
 main() {
     install_prerequisites
     configure_github
+    install_packages
     install_tmux_tpm
     setup_dotfiles
-    install_packages
-    # set_wallpaper
+    set_wallpaper
     set_groups
-    # set_power_button_to_suspend
+    set_power_button_to_suspend
     configure_bluetooth
-    # configure_zram
+    configure_zram
 
     echo "Setup completed successfully!"
 }
